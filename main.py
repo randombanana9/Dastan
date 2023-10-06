@@ -21,14 +21,16 @@ play = True
 
 ticker = 0
 
-def drawBoard():
-    pygame.draw.rect(screen, WHITE, ((49, 39), (602, 602)))
+def drawBoard(position, size):
+    x, y = position
+    xjump, yjump = size[0]//6, size[1]//6
     for i in range(6):
         for j in range(6):
             if (i + j)%2:
-                pygame.draw.rect(screen, BOARD1, ((50 + i*100, 40 + j*100), (100, 100)))
+                pygame.draw.rect(screen, BOARD1, ((x + i*xjump, y + j*yjump), (xjump, yjump)))
             else:
-                pygame.draw.rect(screen, BOARD2, ((50 + i*100, 40 + j*100), (100, 100)))
+                pygame.draw.rect(screen, BOARD2, ((x + i*xjump, y + j*yjump), (xjump, yjump)))
+    pygame.draw.rect(screen, WHITE, (position, size), 2)
 
 def draw(color, x, y):
     pygame.draw.circle(screen, color, (x, y), 40, 0)
@@ -40,7 +42,7 @@ while play:
         if event.type == pygame.QUIT:
             play = False
 
-    drawBoard()
+    drawBoard((50, 40), (600, 600))
     
     pygame.display.update()
 
