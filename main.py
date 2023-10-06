@@ -8,9 +8,12 @@ pygame.display.set_caption("Dastan")
 BACKGROUND = (40,40,40)
 RED = (255,0,0)
 YELLOW = (255,255,0)
-BOARD1 = (140, 51, 19)
-BOARD2 = (230, 166, 68)
 WHITE = (255, 255, 255)
+
+BOARD_THEMES = [((140, 51, 19), (230, 166, 68)),
+                ((181, 136, 99), (240, 217, 181)),
+                ((116, 148, 84), (236, 236, 212))]
+BOARD1, BOARD2 = BOARD_THEMES[2]
 
 clock = pygame.time.Clock()
 
