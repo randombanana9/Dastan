@@ -6,7 +6,7 @@ BACKGROUND = (40,40,40)
 if __name__ == "__main__":
     pygame.init()
 
-    screen = pygame.display.set_mode((1200,680))
+    screen = pygame.display.set_mode((1200,700))
     pygame.display.set_caption("Dastan")
     
     dastan = game.Game()
@@ -22,7 +22,7 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 play = False
 
-        screen.blit(dastan.draw(), (49, 39)) 
+        screen.blit(dastan.draw(), (0, 0)) 
         pygame.display.update()
 
 

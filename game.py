@@ -16,35 +16,36 @@ class Game:
               ((181, 136, 99), (240, 217, 181)),
               ((116, 148, 84), (236, 236, 212))]
 
-    def __init__(self, size = (1000, 600)):
+    def __init__(self, size = (1200, 700)):
         self.size = size
-        self.board_size = (size[1], size[1])  # this will give a square board of y size
-        self.queue_size = (size[0] - size[1], size[1])  # the remaining space left after board is taken
-        self.queue_pos = (size[1], 0)
+        self.board_size = (size[1]*5/7)+(6-(size[1]*5/7)%6)+2  # this will give a square board of y size
+        self.queue_size = (size[0] - self.board_size, size[1])  # the remaining space left after board is taken
+        self.queue_pos = (size[1], 0) #ADAM WHAT THE FUCK IS THIS SUPPOSED TO MEAN
         self.theme = 0
 
     def draw(self) -> pygame.Surface:
         """Returns a surface contining the game drawn onto it"""
         canvas = pygame.Surface(self.size)
-        canvas.blit(self.draw_board(), (0, 0))
+        canvas.fill(BACKGROUND)
+        canvas.blit(self.draw_board(), ((self.size[1] - self.board_size)//2.5-1, (self.size[1] - self.board_size)//2-1))
         canvas.blit(self.draw_queue(), self.queue_pos)
         return canvas
 
 
     def draw_board(self) -> pygame.Surface:
         """Returns a surface containing the board"""
-        canvas = pygame.Surface(self.board_size)
-        x, y = self.board_size
+        canvas = pygame.Surface((self.board_size, self.board_size))
+        x = y = self.board_size-2
         xjump, yjump = x//6, y//6
         c1, c2 = self.THEMES[self.theme]
 
         for i in range(6):
             for j in range(6):
                 if (i + j)%2:
-                    pygame.draw.rect(canvas, c1, ((i * xjump, j * yjump), (xjump, yjump)))
+                    pygame.draw.rect(canvas, c1, ((1+i * xjump, 1+j * yjump), (xjump, yjump)))
                 else:
-                    pygame.draw.rect(canvas, c2, ((i * xjump, j * yjump), (xjump, yjump)))
-        pygame.draw.rect(canvas, WHITE, ((0, 0), self.board_size), 2)
+                    pygame.draw.rect(canvas, c2, ((1+i * xjump, 1+j * yjump), (xjump, yjump)))
+        pygame.draw.rect(canvas, WHITE, ((0, 0), (self.board_size, self.board_size)), 2)
 
         return canvas
 
