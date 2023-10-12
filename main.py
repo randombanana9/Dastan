@@ -22,7 +22,7 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 play = False
 
-        screen.blit(dastan.draw(), (0, 0)) 
+        screen.blit(dastan.draw(), (49, 39)) 
         pygame.display.update()
 
 
