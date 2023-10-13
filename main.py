@@ -1,8 +1,6 @@
 import pygame
 import game
 
-
-
 if __name__ == "__main__":
     pygame.init()
 
@@ -26,7 +24,6 @@ if __name__ == "__main__":
 
         screen.blit(dastan.draw(), (0, 0)) 
         pygame.display.update()
-
 
     pygame.quit()
 

@@ -3,10 +3,11 @@ import pygame, time, random
 pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
 
-BACKGROUND = (40,40,40)
-RED = (255,0,0)
-YELLOW = (255,255,0)
+BACKGROUND = (40, 40, 40)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
 RY = (15, 150, 15)
 CH = (50, 50, 255)
@@ -26,12 +27,24 @@ class QueueButton:
     
     def draw(self, selected = False) -> pygame.Surface:
         """Returns the surface containing the button drawn on"""
-        font = pygame.font.SysFont('Comic Sans MS', int(self.size[1]*0.8))
+        font = pygame.font.SysFont('Trebuchet MS', int(self.size[1]*0.72))
 
         canvas = pygame.Surface(self.size)
         canvas.fill(BACKGROUND)
         pygame.draw.rect(canvas, moveColours[self.move], ((0, 0), self.size), border_radius = 5)
-        canvas.blit(font.render(self.move, True, self.text_colour), (0, 0))
+        txtW, txtH = font.size(self.move)
+        for i in range(4):
+            if i%2:
+                if (i//2)%2:
+                    canvas.blit(font.render(self.move, True, BLACK), ((self.size[0]-txtW)//2+1, (self.size[1]-txtH)//2+1))
+                else:
+                    canvas.blit(font.render(self.move, True, BLACK), ((self.size[0]-txtW)//2+1, (self.size[1]-txtH)//2-1))
+            else:
+                if (i//2)%2:
+                    canvas.blit(font.render(self.move, True, BLACK), ((self.size[0]-txtW)//2-1, (self.size[1]-txtH)//2+1))
+                else:
+                    canvas.blit(font.render(self.move, True, BLACK), ((self.size[0]-txtW)//2-1, (self.size[1]-txtH)//2-1))
+        canvas.blit(font.render(self.move, True, self.text_colour), ((self.size[0]-txtW)//2, (self.size[1]-txtH)//2))
         #########TODO#########
         # -Change coulour if selected
         # -Add outline
