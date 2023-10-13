@@ -1,7 +1,7 @@
 import pygame
 import game
 
-BACKGROUND = (40,40,40)
+
 
 if __name__ == "__main__":
     pygame.init()
@@ -16,7 +16,6 @@ if __name__ == "__main__":
     play = True
 
     while play:
-        screen.fill(BACKGROUND)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

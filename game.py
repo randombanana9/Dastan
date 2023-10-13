@@ -5,10 +5,21 @@ RED = (255,0,0)
 YELLOW = (255,255,0)
 WHITE = (255, 255, 255)
 
+RY = (15, 150, 15)
+CH = (50, 50, 255)
+FA = (200, 25, 25)
+CU = (190, 5, 190)
+JA = (255, 255, 0)
+
+moveColors = {"Ryott": RY, "Chowkidar": CH, "Faujdar": FA, "Cuirassier": CU, "Jazair": JA}
+
 class QueueButton:
-    def __init__(self):
-        ##### TODO ######
-        pass
+    def __init__(self, move, position = 0, cost = 0, size = (100,30)):
+        self.move = move
+        self.position = position
+        self.cost = cost
+        self.size = size
+        self.color = moveColors[move]
 
 
 class Game:
@@ -20,7 +31,7 @@ class Game:
         self.size = size
         self.board_size = (size[1]*5/7)+(6-(size[1]*5/7)%6)+2  # this will give a square board of y size
         self.queue_size = (size[0] - self.board_size, size[1])  # the remaining space left after board is taken
-        self.queue_pos = (size[1], 0) #ADAM WHAT THE FUCK IS THIS SUPPOSED TO MEAN
+        self.queue_pos = (size[1], 0) 
         self.theme = 0
 
     def draw(self) -> pygame.Surface:
@@ -28,7 +39,7 @@ class Game:
         canvas = pygame.Surface(self.size)
         canvas.fill(BACKGROUND)
         canvas.blit(self.draw_board(), ((self.size[1] - self.board_size)//2.5-1, (self.size[1] - self.board_size)//2-1))
-        canvas.blit(self.draw_queue(), self.queue_pos)
+        canvas.blit(self.draw_queue(None), self.queue_pos)
         return canvas
 
 
@@ -49,7 +60,7 @@ class Game:
 
         return canvas
 
-    def draw_queue(self) -> pygame.Surface:
+    def draw_queue(self, queue) -> pygame.Surface:
         """Returns a surface containing the queue buttons"""
         ######## TODO ##########
         canvas = pygame.Surface(self.queue_size)
