@@ -20,6 +20,9 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 play = False
+            elif event.type == pygame.MOUSEBUTTONDOWN: 
+                if event.button == 1: 
+                    dastan.handle_click(pygame.mouse.get_pos())
 
         screen.blit(dastan.draw(), (0, 0)) 
         pygame.display.update()

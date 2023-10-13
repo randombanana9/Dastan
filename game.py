@@ -17,20 +17,34 @@ JA = (255, 255, 0)
 moveColours = {"Ryott": RY, "Chowkidar": CH, "Faujdar": FA, "Cuirassier": CU, "Jazair": JA}
 
 class QueueButton:
-    def __init__(self, move, cost = 0, size = (100,30)):
+    def __init__(self, move, position, cost = 0, size = (100,30)):
         self.move = move
+        self.position = position   # The buttons position on the queue canvas
         self.cost = cost
         self.size = size
         self.text_colour = WHITE
     
-    def draw(self, selected = False):
+    def draw(self, selected = False) -> pygame.Surface:
+        """Returns the surface containing the button drawn on"""
         font = pygame.font.SysFont('Comic Sans MS', int(self.size[1]*0.8))
 
         canvas = pygame.Surface(self.size)
         canvas.fill(BACKGROUND)
         pygame.draw.rect(canvas, moveColours[self.move], ((0, 0), self.size), border_radius = 5)
         canvas.blit(font.render(self.move, True, self.text_colour), (0, 0))
+        #########TODO#########
+        # -Change coulour if selected
+        # -Add outline
         return canvas
+    
+    def contains(self, position) -> bool:
+        """Returns True if a given position is withthin the buttons position on the board"""
+        x, y = position
+        px, py = self.position
+        sx, sy = self.size
+        if px <= x <= px + sx and py <= y <= py + sy:
+            return True
+        return False
 
 
 
@@ -42,20 +56,21 @@ class Game:
     def __init__(self, size = (1200, 700)):
         self.size = size # Size of the game canvas
         self.board_size = (size[1]*5/7)+(6-(size[1]*5/7)%6)+2  # this will give a square board of 5/7th of the y size (rounded up to the neares multiple of 6)
-        self.queue_size = (size[0] - self.board_size, size[1])  # the remaining space left after board is taken
+        self.board_position = ((self.size[1] - self.board_size)//2.5-1, (self.size[1] - self.board_size)//2-1)
+        self.queue_size = (size[0] - self.board_size, size[1])  # the remaining space left after board is taken   -      NEEDS TO BE FIXED
         #The next line is prety simple so if you dont understand it its on you
         self.queue_pos = ((2*(self.size[1] - self.board_size)//2.5-1) + self.board_size , (self.size[1] - self.board_size)//2-1 + self.board_size//3)  
         self.theme = 0  # Current theme
 
         ####temp#####
-        self.queue1 = [QueueButton(i) for i in moveColours.keys()]
+        self.queue1 = [QueueButton(i, (110 * index, 0)) for index, i in enumerate(moveColours.keys())]
 
     def draw(self) -> pygame.Surface:
         """Returns a surface contining the game drawn onto it"""
         canvas = pygame.Surface(self.size)
         canvas.fill(BACKGROUND)
-        canvas.blit(self.draw_board(), ((self.size[1] - self.board_size)//2.5-1, (self.size[1] - self.board_size)//2-1))
-        canvas.blit(self.draw_queue(None), self.queue_pos)
+        canvas.blit(self.draw_board(), self.board_position)
+        canvas.blit(self.draw_queue(), self.queue_pos)
         return canvas
 
 
@@ -76,16 +91,33 @@ class Game:
 
         return canvas
 
-    def draw_queue(self, queue) -> pygame.Surface:
+    def draw_queue(self) -> pygame.Surface:
         """Returns a surface containing the queue buttons"""
         ######## TODO ##########
         canvas = pygame.Surface(self.queue_size)
         canvas.fill(BACKGROUND)
-        for index, button in enumerate(self.queue1):
-            canvas.blit(button.draw(), ((index)*110, 0))
+        for button in self.queue1:
+            canvas.blit(button.draw(), button.position)
         return canvas
 
     def handle_click(self, position):
         """deals with what to do when it is clicked"""
+        x, y = position
+        bx, by = self.board_position[0] + 1, self.board_position[1] + 1   # +1 so that border is avoided
+        bs = self.board_size - 2 # -2 to avoid border
+        if bx <= x <= bx+bs and by <= y <= by+bs:
+            square_size = bs // 6
+            square_x = (x-bx) // square_size
+            square_y = (y-by) // square_size
+            print(f"Square ({square_x}, {square_y}) clicked!")
+        else:
+            qx, qy = self.queue_pos
+            relative_pos = (x-qx, y-qy)
+            for button in self.queue1:
+                if button.contains(relative_pos):
+                    print(f"Queue Button \"{button.move}\" pressed!")
+
         ######## TODO ##########
+        # -Fix else condition when queue size fixed
+        # -Fix queue when it is changed
         pass
