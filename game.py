@@ -72,7 +72,8 @@ class Game:
         self.board_position = ((self.size[1] - self.board_size)//2.5-1, (self.size[1] - self.board_size)//2-1)
         self.queue_size = (size[0] - self.board_size, size[1])  # the remaining space left after board is taken   -      NEEDS TO BE FIXED
         #The next line is prety simple so if you dont understand it its on you
-        self.queue_pos = ((2*(self.size[1] - self.board_size)//2.5-1) + self.board_size , (self.size[1] - self.board_size)//2-1 + self.board_size//3)  
+        #self.queue_pos = ((2*(self.size[1] - self.board_size)//2.5-1) + self.board_size , (self.size[1] - self.board_size)//2-1 + self.board_size//3)  
+        self.queue_pos = ((self.size[1] - self.board_size)//2.5 + self.board_size + 1, (self.size[1] - self.board_size)//2-1)
         self.theme = 0  # Current theme
 
         ####temp#####
