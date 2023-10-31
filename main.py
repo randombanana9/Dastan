@@ -4,7 +4,7 @@ import game
 if __name__ == "__main__":
     pygame.init()
 
-    screen = pygame.display.set_mode((1200,700))
+    screen = pygame.display.set_mode(game.SCREEN_SIZE)
     pygame.display.set_caption("Dastan")
     
     dastan = game.Game()

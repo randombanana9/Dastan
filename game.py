@@ -3,6 +3,8 @@ import pygame, time, random
 pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
 
+SCREEN_SIZE = (1200, 700)
+
 BACKGROUND = (40, 40, 40)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
@@ -18,7 +20,7 @@ JA = (255, 255, 0)
 moveColours = {"Ryott": RY, "Chowkidar": CH, "Faujdar": FA, "Cuirassier": CU, "Jazair": JA}
 
 class QueueButton:
-    def __init__(self, move, position, cost = 0, size = (100,30)):
+    def __init__(self, move, position, cost = 0, size = (SCREEN_SIZE[0]//12,SCREEN_SIZE[1]//70 * 3)):
         self.move = move
         self.position = position   # The buttons position on the queue canvas
         self.cost = cost
@@ -66,7 +68,7 @@ class Game:
               ((181, 136, 99), (240, 217, 181)),
               ((116, 148, 84), (236, 236, 212))]
 
-    def __init__(self, size = (1200, 700)):
+    def __init__(self, size = SCREEN_SIZE):
         self.size = size # Size of the game canvas
         self.board_size = (size[1]*5/7)+(6-(size[1]*5/7)%6)+2  # this will give a square board of 5/7th of the y size (rounded up to the neares multiple of 6)
         self.board_position = ((self.size[1] - self.board_size)//2.5-1, (self.size[1] - self.board_size)//2-1)
@@ -76,7 +78,7 @@ class Game:
         self.queue_pos = ((self.size[1] - self.board_size)//2.5 + self.board_size + 1, (self.size[1] - self.board_size)//2-1)
         self.theme = 0  # Current theme
         ####temp#####
-        self.queue1 = [QueueButton(i, (110 * index, 0)) for index, i in enumerate(moveColours.keys())]
+        self.queue1 = [QueueButton(i, (SCREEN_SIZE[0]//11 * index, self.queue_size[1]//3)) for index, i in enumerate(moveColours.keys())]
 
     def draw(self) -> pygame.Surface:
         """Returns a surface contining the game drawn onto it"""
@@ -111,6 +113,7 @@ class Game:
         canvas.fill(BACKGROUND)
         for button in self.queue1:
             canvas.blit(button.draw(), button.position)
+        
         return canvas
 
     def handle_click(self, position):
