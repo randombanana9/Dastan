@@ -19,6 +19,10 @@ JA = (255, 255, 0)
 
 moveColours = {"Ryott": RY, "Chowkidar": CH, "Faujdar": FA, "Cuirassier": CU, "Jazair": JA}
 
+def invertColors(cols = ()):
+    newCols = tuple(255 - col for col in cols)
+    return newCols
+
 class QueueButton:
     def __init__(self, move, position, cost = 0, size = (SCREEN_SIZE[0]//12,SCREEN_SIZE[1]//70 * 3)):
         self.move = move
@@ -26,14 +30,36 @@ class QueueButton:
         self.cost = cost
         self.size = size
         self.text_colour = WHITE
+        self.selected = False
+
+    def setPos(self, newPos = (None, None)):
+        if newPos == (None, None):
+            return None
+        self.position = newPos
+        return 1
+
+    def getPos(self):
+        return self.position
     
-    def draw(self, selected = False) -> pygame.Surface:
+    def getSize(self):
+        return self.size
+    
+    def toggleSelected(self):
+        self.selected = not self.selected
+
+    def getSelected(self):
+        return self.selected
+    
+    def draw(self) -> pygame.Surface:
         """Returns the surface containing the button drawn on"""
         font = pygame.font.SysFont('Trebuchet MS', int(self.size[1]*0.72))
 
         canvas = pygame.Surface(self.size)
         canvas.fill(BACKGROUND)
-        pygame.draw.rect(canvas, moveColours[self.move], ((0, 0), self.size), border_radius = 5)
+        if self.selected:
+            pygame.draw.rect(canvas, invertColors(moveColours[self.move]), ((0, 0), self.size))
+        else:
+            pygame.draw.rect(canvas, moveColours[self.move], ((0, 0), self.size), border_radius = 5)
         txtW, txtH = font.size(self.move)
         for i in range(4):
             if i%2:
@@ -48,7 +74,7 @@ class QueueButton:
                     canvas.blit(font.render(self.move, True, BLACK), ((self.size[0]-txtW)//2-1, (self.size[1]-txtH)//2-1))
         canvas.blit(font.render(self.move, True, self.text_colour), ((self.size[0]-txtW)//2, (self.size[1]-txtH)//2))
         #########TODO#########
-        # -Change coulour if selected
+        # -Change coulour if selected - Kinda done
         # -Add outline
         return canvas
     
@@ -79,6 +105,8 @@ class Game:
         self.theme = 0  # Current theme
         ####temp#####
         self.queue1 = [QueueButton(i, (SCREEN_SIZE[0]//11 * index, self.queue_size[1]//3)) for index, i in enumerate(moveColours.keys())]
+        for button in self.queue1: #centres the queue buttons in the allocated queue area
+            button.setPos((button.getPos()[0] + (self.queue_size[0]-((SCREEN_SIZE[0]//11)*5))//2, button.getPos()[1]))
 
     def draw(self) -> pygame.Surface:
         """Returns a surface contining the game drawn onto it"""
@@ -111,7 +139,26 @@ class Game:
         ######## TODO ##########
         canvas = pygame.Surface(self.queue_size)
         canvas.fill(BACKGROUND)
+        
+        # Makes a border rectangle around the queue
+        x, y = self.queue1[0].getPos() #position of the first button
+        width, height = self.queue1[0].getSize() #dimensions of the button
+        border = 10 #border size
+
+        # Calculates the rectangle's position and size
+        rect_x = x - border
+        rect_y = y - border
+        rect_width = SCREEN_SIZE[0] // 11 * 4 + width + 20
+        rect_height = height + 20
+
+        # Draw the rectangle
+        pygame.draw.rect(canvas, BLACK, ((rect_x, rect_y), (rect_width, rect_height)))
+
         for button in self.queue1:
+            if button.getSelected():
+                borderPos = (button.position[0] - 1, button.position[1] - 1)
+                borderSize = (button.getSize()[0] + 2, button.getSize()[1] + 2)
+                pygame.draw.rect(canvas, WHITE, (borderPos, borderSize), border_radius = 2)
             canvas.blit(button.draw(), button.position)
         
         return canvas
@@ -129,9 +176,15 @@ class Game:
         else:
             qx, qy = self.queue_pos
             relative_pos = (x-qx, y-qy)
-            for button in self.queue1:
+            for button in self.queue1[:3]:
                 if button.contains(relative_pos):
                     print(f"Queue Button \"{button.move}\" pressed!")
+                    if not button.getSelected():
+                        for deselect in self.queue1:
+                            if deselect.getSelected():
+                                deselect.toggleSelected()
+                    button.toggleSelected()
+
 
         ######## TODO ##########
         # -Fix else condition when queue size fixed
