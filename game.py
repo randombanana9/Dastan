@@ -23,6 +23,19 @@ def invertColors(cols = ()):
     newCols = tuple(255 - col for col in cols)
     return newCols
 
+def changeBrightness(factor, cols = ()):
+    newCols = tuple(cols[i]*factor for i in range(len(cols)))
+    return newCols
+
+class Piece:
+    def __init__(self):
+        self.owner
+        self.icon
+        self.type
+        self.queue
+        self.positionX
+        self.positionY
+
 class QueueButton:
     def __init__(self, move, position, cost = 0, size = (SCREEN_SIZE[0]//12,SCREEN_SIZE[1]//70 * 3)):
         self.move = move
@@ -56,10 +69,7 @@ class QueueButton:
 
         canvas = pygame.Surface(self.size)
         canvas.fill(BACKGROUND)
-        if self.selected:
-            pygame.draw.rect(canvas, invertColors(moveColours[self.move]), ((0, 0), self.size))
-        else:
-            pygame.draw.rect(canvas, moveColours[self.move], ((0, 0), self.size), border_radius = 5)
+        pygame.draw.rect(canvas, changeBrightness(1 - 0.2*int(self.selected), moveColours[self.move]), ((0, 0), self.size), border_radius = 5 * int(not self.selected))
         txtW, txtH = font.size(self.move)
         for i in range(4):
             if i%2:
