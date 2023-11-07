@@ -31,7 +31,7 @@ class Piece:
     def __init__(self):
         self.owner
         self.icon
-        self.type
+        self.isMirza
         self.queue
         self.positionX
         self.positionY
@@ -69,7 +69,9 @@ class QueueButton:
 
         canvas = pygame.Surface(self.size)
         canvas.fill(BACKGROUND)
-        pygame.draw.rect(canvas, changeBrightness(1 - 0.2*int(self.selected), moveColours[self.move]), ((0, 0), self.size), border_radius = 5 * int(not self.selected))
+        color = changeBrightness(1 - 0.2*int(self.selected), moveColours[self.move])
+        border = 5 * int(not self.selected)
+        pygame.draw.rect(canvas, color, ((0, 0), self.size), border_radius = border)
         txtW, txtH = font.size(self.move)
         for i in range(4):
             if i%2:
@@ -83,9 +85,6 @@ class QueueButton:
                 else:
                     canvas.blit(font.render(self.move, True, BLACK), ((self.size[0]-txtW)//2-1, (self.size[1]-txtH)//2-1))
         canvas.blit(font.render(self.move, True, self.text_colour), ((self.size[0]-txtW)//2, (self.size[1]-txtH)//2))
-        #########TODO#########
-        # -Change coulour if selected - Kinda done
-        # -Add outline
         return canvas
     
     def contains(self, position) -> bool:
@@ -146,7 +145,6 @@ class Game:
 
     def draw_queue(self) -> pygame.Surface:
         """Returns a surface containing the queue buttons"""
-        ######## TODO ##########
         canvas = pygame.Surface(self.queue_size)
         canvas.fill(BACKGROUND)
         
@@ -194,9 +192,3 @@ class Game:
                             if deselect.getSelected():
                                 deselect.toggleSelected()
                     button.toggleSelected()
-
-
-        ######## TODO ##########
-        # -Fix else condition when queue size fixed
-        # -Fix queue when it is changed
-        pass
